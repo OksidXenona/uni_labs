@@ -1,10 +1,10 @@
-﻿Program lab3;
+Program lab3;
 
 uses
   crt; 
 var
   choice, n, paragraphs: integer;
-  a, b, res, error, exact_value: double;
+    a, b, res, error, exact_value: double;
   exitFlag: boolean;
   key: char;
   // Флаги для отслеживания состояния расчетов
@@ -19,7 +19,7 @@ const
 //Функция
 function f(x: double): double; //Задаём функцию
 begin
-  f := 2 * x * x * x - 5 * x + 10;
+  f := 3 * x * x * x * x - 2 * x * x * x - 5 * x + 10;
 end;
 
 //Функция, возвращающая только положительные значения
@@ -37,7 +37,7 @@ end;
 //Первообразная
 function Antiderivative(x: double): double;
 begin
-  Antiderivative := 0.5 * x * x * x * x - 2.5 * x * x + 10 * x;
+  Antiderivative := (-1/2)*x * x * x * x + (-5/2) * x * x + (3/5) * x * x * x * x * x + 10 * x;
 end;
 
 //Значение интеграла по формуле Ньютона-Лейбница
@@ -149,7 +149,7 @@ begin
         begin
           sub_choice := sub_choice - 1;
           if sub_choice < 1 then sub_choice := sub_paragraphs;
-        end;
+end;
       's', 'S', 'ы', 'Ы', #40:  // Вниз (стрелка вниз)
         begin
           sub_choice := sub_choice + 1;
@@ -261,7 +261,7 @@ begin
                   begin
                     writeln();
                     writeln('Ошибка! Введите корректное число.');
-                  end;
+end;
                 end
                 else
                 begin
@@ -383,7 +383,7 @@ begin
                   b := temp_b;
                   limits_set := true;
                   reset_calculation_flags; // Сбрасываем флаги расчетов
-                  exit_submenu := true;
+exit_submenu := true;
                 end
                 else
                 begin
@@ -499,7 +499,7 @@ begin
   writeln('Интеграл рассчитан.');
   writeln('========================================');
   writeln();
-  writeln('Функция: y = 2x^3 - 5x + 10');
+  writeln('Функция: y = 3x^4 - 2x^3 - 5x + 10');
   writeln('Нижний предел a = ', a:0:6);
   writeln('Верхний предел b = ', b:0:6);
   writeln('Корень уравнения: ', root:0:6);
@@ -549,7 +549,7 @@ begin
   writeln('Погрешность рассчитана.');
   writeln('========================================');
   writeln();
-  writeln('Функция: y = 2x^3 - 5x + 10');
+  writeln('Функция: y = 3x^4 - 2x^3 - 5x + 10');
   writeln('Нижний предел a = ', a:0:6);
   writeln('Верхний предел b = ', b:0:6);
   writeln('Корень уравнения: ', root:0:6);
@@ -558,7 +558,7 @@ begin
   writeln('Площадь фигуры S ≈ ', res:0:6);
   writeln('----------------------------------------');
   writeln('Абсолютная погрешность: ', abs_error:0:6);
-  writeln('Относительная погрешность: ', rel_error:0:2, ' %');
+  writeln('Относительная погрешность: ', rel_error:0:6, ' %');
   writeln('----------------------------------------');
   writeln();
   writeln('Нажмите любую клавишу...');
@@ -639,7 +639,7 @@ begin
       writeln('Результаты вычислений.');
       writeln('========================================');
       writeln();
-      writeln('Функция: y = 2x^3 - 5x + 10');
+      writeln('Функция: y = 3x^4 - 2x^3 - 5x + 10');
       writeln('Нижний предел a = ', a:0:6);
       writeln('Верхний предел b = ', b:0:6);
       writeln('Корень уравнения: ', root:0:6);
@@ -661,7 +661,7 @@ begin
   writeln('Результаты вычислений.');
   writeln('========================================');
   writeln();
-  writeln('Функция: y = 2x^3 - 5x + 10');
+  writeln('Функция: y = 3x^4 - 2x^3 - 5x + 10');
   writeln('Нижний предел a = ', a:0:6);
   writeln('Верхний предел b = ', b:0:6);
   writeln('Корень уравнения: ', root:0:6);
@@ -672,7 +672,7 @@ begin
   
   if exact_value <> 0 then
     writeln('Относительная погрешность: ', 
-            (abs(exact_value - res) / abs(exact_value) * 100):0:2, ' %')
+            (abs(exact_value - res) / abs(exact_value) * 100):0:6, ' %')
   else
     writeln('Относительная погрешность: 0 %');
   
@@ -689,7 +689,7 @@ begin
   writeln('Лабораторная работа №3.');
   writeln('Изучение базовых принципов организации процедур и функций.');
   writeln('----------------------------------------');
-  writeln('y = 2x^3 - 5x + 10');
+  writeln('y = 3x^4 - 2x^3 - 5x + 10');
   writeln('Корень уравнения: ', root);
   writeln();
   writeln('Выберите действие:');
@@ -739,7 +739,7 @@ begin
   writeln('Текущие данные.');
   writeln('========================================');
   writeln();
-  writeln('Функция: y = 2x^3 - 5x + 10');
+  writeln('Функция: y = 3x^4 - 2x^3 - 5x + 10');
   writeln('Корень уравнения: ', root:0:6);
   writeln();
   
@@ -779,7 +779,7 @@ begin
     writeln('Абсолютная погрешность: ', abs(exact_value - res):0:6);
     if exact_value <> 0 then
       writeln('Относительная погрешность: ', 
-              (abs(exact_value - res) / abs(exact_value) * 100):0:2, ' %');
+              (abs(exact_value - res) / abs(exact_value) * 100):0:6, ' %');
   end
   else writeln('Погрешность не рассчитана');
   writeln();
