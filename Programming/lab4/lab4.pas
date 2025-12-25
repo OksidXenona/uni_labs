@@ -192,7 +192,7 @@ begin
   current := head;
   while current <> nil do
   begin
-    inc(count);
+    count := count + 1;
     current := current^.next;
   end;
   AmountOfElements := count;
@@ -298,184 +298,42 @@ begin
   readkey;
 end;
 
-procedure FindElementByIndex(index: integer);
+procedure FindElementByIndex;
 var
   current: PNode;
-  i: integer;
+  i, index: integer;
 begin
   clrscr();
   writeln('     Поиск элемента по индексу     ');
   writeln('-----------------------------------');
-  if not is_created then
-  begin
-    writeln('Структура не создана.');
-    exit;
-  end;
-  if head = nil then
-  begin
-    writeln('Список пуст.');
-    exit;
-  end;
-  if index < 0 then
-  begin
-    writeln('Индекс должен быть >= 0.');
-    exit;
-  end;
-
-  current := head;
-  i := 0;
-  while (current <> nil) and (i < index) do
-  begin
-    current := current^.next;
-    i := i + 1;
-  end;
-
-  if current = nil then
-    writeln('Элемента с индексом ', index, ' не существует.')
-  else
-    writeln('Найден элемент с индексом [', index, ']: логин = ', current^.login, ', пароль = ', current^.password);
-end;
-
-procedure ReplaceElementbyIndex(index: integer);
-var
-  current: PNode;
-  i: integer;
-begin
-  clrscr();
-  writeln('     Замена элемента по индексу     ');
-  writeln('------------------------------------');
-  if not is_created then
-  begin
-    writeln('Структура не создана.');
-    exit;
-  end;
-  if head = nil then
-  begin
-    writeln('Список пуст.');
-    exit;
-  end;
-  if index < 0 then
-  begin
-    writeln('Индекс должен быть >= 0.');
-    exit;
-  end;
-
-  current := head;
-  i := 0;
-  while (current <> nil) and (i < index) do
-  begin
-    current := current^.next;
-    i := i + 1;
-  end;
-
-  if current = nil then
-    writeln('Элемента с индексом ', index, ' не существует.')
-  else
-  begin
-    writeln('Текущие данные: логин = ', current^.login, ', пароль = ', current^.password);
-    writeln('Введите новый логин: ');
-    readln(current^.login);
-    writeln('Введите новый пароль: ');
-    readln(current^.password);
-    writeln('Элемент [', index, '] обновлён.');
-  end;
-end;
-
-
-procedure AddBeforeIndex(index: integer);
-var
-  newNode, current: PNode;
-  i: integer;
-begin
-    clrscr();
-  writeln('     Добавление элемента перед индексом     ');
-  writeln('--------------------------------------------');
-  if not is_created then
-  begin
-    writeln('Структура не создана.');
-    exit;
-  end;
-
-  new(newNode);
-  writeln('Введите логин: '); readln(newNode^.login);
-  writeln('Введите пароль: '); readln(newNode^.password);
-
-  if head = nil then
-  begin
-    //вставка в пустой список
-    head := newNode;
-    tail := newNode;
-    newNode^.next := nil;
-    newNode^.prev := nil;
-    writeln('Элемент добавлен в пустой список.');
-    exit;
-  end;
-
-  if index <= 0 then
-  begin
-    //вставка в начало
-    newNode^.next := head;
-    newNode^.prev := nil;
-    head^.prev := newNode;
-    head := newNode;
-    writeln('Элемент вставлен в начало списка (перед индексом 0).');
-    exit;
-  end;
-
-  //ищем элемент по индексу
-  current := head;
-  i := 0;
-  while (current <> nil) and (i < index) do
-  begin
-    current := current^.next;
-    inc(i);
-  end;
-
-  if current = nil then
-  begin
-    //если индекс за пределами, значит вставляем в конец
-    newNode^.next := nil;
-    newNode^.prev := tail;
-    tail^.next := newNode;
-    tail := newNode;
-    writeln('Индекс ', index, ' выходит за границы. Элемент добавлен в конец.');
-  end
-  else
-  begin
-    //вставка перед позицией index
-    newNode^.prev := current^.prev;
-    newNode^.next := current;
-    current^.prev^.next := newNode;
-    current^.prev := newNode;
-    writeln('Элемент вставлен перед индексом ', index, '.');
-  end;
-end;
-
-procedure DeleteByIndex(index: integer);
-var
-  current: PNode;
-  i: integer;
-begin
-  clrscr();
-  writeln('     Удаление по индексу     ');
-  writeln('-----------------------------');
   
   if not is_created then
   begin
     writeln('Структура не создана.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
     exit;
   end;
+  
   if head = nil then
   begin
     writeln('Список пуст.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
     exit;
   end;
+  
+  write('Введите индекс для поиска (от 0 до ', AmountOfElements - 1, '): ');
+  readln(index);
+  
   if index < 0 then
   begin
     writeln('Индекс должен быть >= 0.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
     exit;
   end;
-
+  
   current := head;
   i := 0;
   while (current <> nil) and (i < index) do
@@ -483,115 +341,699 @@ begin
     current := current^.next;
     i := i + 1;
   end;
-
+  
   if current = nil then
-  begin
-    writeln('Элемента с индексом ', index, ' не существует.');
-    exit;
-  end;
-
-  // Удаление узла current
-  if current^.prev <> nil then
-    current^.prev^.next := current^.next
+    writeln('Элемента с индексом ', index, ' не существует.')
   else
-    head := current^.next;  // удаляем первый элемент
-
-  if current^.next <> nil then
-    current^.next^.prev := current^.prev
-  else
-    tail := current^.prev;  // удаляем последний элемент
-
-  dispose(current);
-  writeln('Элемент с индексом ', index, ' удалён.');
+    writeln('Найден элемент с индексом [', index, ']: логин = ', 
+            current^.login, ', пароль = ', current^.password);
+  
+  writeln('Нажмите любую клавишу...');
+  readkey;
 end;
 
-procedure SplitList(ind: integer); //разделить список на 2
+procedure ReplaceElementByIndex;
 var
   current: PNode;
-  i: integer;
+  i, index: integer;
+  newLogin: string;
+  newPassword: integer;
 begin
+  clrscr();
+  writeln('     Замена элемента по индексу     ');
+  writeln('------------------------------------');
+  
   if not is_created then
   begin
-    writeln('Список не создан.');
+    writeln('Структура не создана.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
     exit;
   end;
+  
   if head = nil then
   begin
-    writeln('Список пуст.');
-    exit;
-  end;
-  if ind < 0 then
-  begin
-    writeln('Индекс должен быть >= 0.');
+    writeln('Список пуст. Нечего заменять.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
     exit;
   end;
 
+  writeln('Текущие элементы списка:');
+  writeln('------------------------');
   current := head;
   i := 0;
-  while (current <> nil) and (i <= ind) do
+  while current <> nil do
   begin
+    writeln('[', i, '] ', current^.login, ' <---> ', current^.password);
     current := current^.next;
     i := i + 1;
   end;
-
+  writeln('------------------------');
+  writeln('Всего элементов: ', i);
+  writeln;
+  
+  //запрашиваем индекс
+  write('Введите индекс элемента для замены (0 - ', i-1, '): ');
+  readln(index);
+  
+  //проверяем корректность индекса
+  if (index < 0) or (index >= i) then
+  begin
+    writeln('Ошибка: индекс должен быть от 0 до ', i-1, '.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  //находим элемент с указанным индексом
+  current := head;
+  i := 0;
+  while (current <> nil) and (i < index) do
+  begin
+    current := current^.next;
+    i:= i + 1;
+  end;
+  
   if current = nil then
   begin
-    writeln('Невозможно разделить. Индекс выходит за границы списка.');
+    writeln('Элемента с индексом ', index, ' не существует.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
     exit;
   end;
-  if current^.next = nil then
-  begin
-    writeln('Разделение после последнего элемента. Второй список будет пуст.');
-    exit;
-  end;
-
-  //формируем второй список
-  head2 := current^.next;
-  tail2 := tail;
-  head2^.prev := nil;
-  current^.next := nil;
-  tail := current;
-
-  is_created2 := true;
-  writeln('Список разделён. Второй список создан.');
+  
+  //показываем текущие данные элемента
+  writeln;
+  writeln('Текущие данные элемента [', index, ']:');
+  writeln('Логин: ', current^.login);
+  writeln('Пароль: ', current^.password);
+  writeln;
+  writeln('Введите новые данные:');
+  
+  //запрашиваем новые данные
+  write('Новый логин: ');
+  readln(newLogin);
+  write('Новый пароль: ');
+  readln(newPassword);
+  
+ 
+    //выполняем замену
+    current^.login := newLogin;
+    current^.password := newPassword;
+    
+    writeln;
+    writeln('Элемент [', index, '] успешно обновлён.');
+    
+    //показываем обновленный список
+    writeln;
+    writeln('Обновленный список:');
+    writeln('-------------------');
+    current := head;
+    i := 0;
+    while current <> nil do
+    begin
+      writeln('[', i, '] ', current^.login, ' <---> ', current^.password);
+      current := current^.next;
+      i := i + 1;
+    end;
+  
+  writeln;
+  writeln('Нажмите любую клавишу...');
+  readkey;
 end;
 
 procedure GetListsTogether;
+var
+  current: PNode;
+  count1, count2, total: integer;
 begin
+  clrscr();
+  writeln('     Объединение двух списков     ');
+  writeln('----------------------------------');
+  
+  //проверяем существование списков
   if not is_created then
   begin
     writeln('Первый список не создан.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
     exit;
   end;
+  
   if not is_created2 then
   begin
     writeln('Второй список не создан.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
     exit;
   end;
+  
+  //подсчитываем элементы в каждом списке
+  count1 := 0;
+  current := head;
+  writeln('Первый список:');
+  writeln('--------------');
+  if head = nil then
+    writeln('Список пуст.')
+  else
+  begin
+    while current <> nil do
+    begin
+      writeln('[', count1, '] ', current^.login, ' <---> ', current^.password);
+      current := current^.next;
+      count1 := count1 + 1;
+    end;
+  end;
+  writeln('Всего элементов: ', count1);
+  writeln;
+  
+  count2 := 0;
+  current := head2;
+  writeln('Второй список:');
+  writeln('--------------');
   if head2 = nil then
+    writeln('Список пуст')
+  else
   begin
-    writeln('Второй список пуст. Объединение не требуется.');
+    while current <> nil do
+    begin
+      writeln('[', count2, '] ', current^.login, ' <---> ', current^.password);
+      current := current^.next;
+      count2 := count2 + 1;
+    end;
+  end;
+  writeln('Всего элементов: ', count2);
+  writeln;
+  
+  total := count1 + count2;
+  
+  //если оба списка пустые
+  if (count1 = 0) and (count2 = 0) then
+  begin
+    writeln('Оба списка пусты.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
     exit;
   end;
-
-  if head = nil then //если первый список пуст
+  
+  //если второй список пустой
+  if count2 = 0 then
   begin
+    writeln('Второй список пуст.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  //показываем, что будет после объединения
+  writeln('После объединения будет ', total, ' элементов.');
+  writeln();
+  
+  //выполняем объединение
+  if head = nil then
+  begin
+    //если первый список пустой
     head := head2;
     tail := tail2;
   end
   else
   begin
-    //соединяем tail первого с head второго
-    tail^.next := head2;
-    head2^.prev := tail;
-    tail := tail2;
+    //если первый список не пустой
+    if tail <> nil then
+    begin
+      tail^.next := head2;
+      if head2 <> nil then
+        head2^.prev := tail;
+    end;
+    
+    //обновляем tail
+    if tail2 <> nil then
+      tail := tail2;
   end;
-
-  //обнуляем второй список
+  
+  //очищаем второй список
   head2 := nil;
   tail2 := nil;
   is_created2 := false;
-  writeln('Списки объединены.');
+  
+  //показываем результат
+  writeln;
+  writeln('Списки успешно объединены!');
+  writeln;
+  
+  //показываем объединенный список
+  current := head;
+  if current = nil then
+  begin
+    writeln('Объединенный список пуст.');
+  end
+  else
+  begin
+    writeln('Объединенный список:');
+    writeln('--------------------');
+    var i: integer := 0;
+    while current <> nil do
+    begin
+      writeln('[', i, '] ', current^.login, ' <---> ', current^.password);
+      current := current^.next;
+      i := i + 1;
+    end;
+    writeln('--------------------');
+    writeln('Всего элементов: ', i);
+  end;
+  
+  writeln;
+  writeln('Второй список очищен.');
+  writeln('Теперь доступен только объединенный список.');
+  
+  writeln('Нажмите любую клавишу...');
+  readkey;
+end;
+
+procedure AddBeforeIndex;
+var
+  newNode, current: PNode;
+  i, index: integer;
+begin
+  clrscr();
+  writeln('     Добавление элемента перед индексом     ');
+  writeln('--------------------------------------------');
+  
+  if not is_created then
+  begin
+    writeln('Структура не создана.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+
+  //запрашиваем индекс у пользователя
+  if head = nil then
+  begin
+    writeln('Список пуст. Новый элемент будет добавлен как первый.');
+    index := 0;
+  end
+  else
+  begin
+    write('Введите индекс, перед которым добавить элемент (0 - ', AmountOfElements - 1, '): ');
+    readln(index);
+  end;
+
+  if (index < 0) then
+  begin
+    writeln('Индекс должен быть >= 0.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+
+  //создаем новый узел
+  new(newNode);
+  writeln('Введите логин нового элемента: ');
+  readln(newNode^.login);
+  writeln('Введите пароль нового элемента: ');
+  readln(newNode^.password);
+
+  //если список пустой
+  if head = nil then
+  begin
+    head := newNode;
+    tail := newNode;
+    newNode^.next := nil;
+    newNode^.prev := nil;
+    writeln('Элемент добавлен в пустой список.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+
+  //если вставляем перед первым элементом
+  if index = 0 then
+  begin
+    newNode^.next := head;
+    newNode^.prev := nil;
+    head^.prev := newNode;
+    head := newNode;
+    writeln('Элемент вставлен в начало списка (перед индексом 0).');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+
+  //ищем элемент с указанным индексом
+  current := head;
+  i := 0;
+  
+  //идем до элемента с нужным индексом
+  while (current <> nil) and (i < index) do
+  begin
+    current := current^.next;
+    i := i + 1;
+  end;
+
+  //если индекс равен количеству элементов, добавляем в конец
+  if (current = nil) and (i = index) then
+  begin
+    //добавляем в конец
+    newNode^.next := nil;
+    newNode^.prev := tail;
+    tail^.next := newNode;
+    tail := newNode;
+    writeln('Элемент добавлен в конец списка.');
+  end
+  else if current = nil then
+  begin
+    //если индекс выходит за пределы списка
+    writeln('Индекс ', index, ' выходит за границы списка. Элемент не добавлен.');
+    dispose(newNode); // Освобождаем память, так как не используем
+  end
+  else
+  begin
+    //вставляем перед найденным элементом
+    newNode^.prev := current^.prev;
+    newNode^.next := current;
+    
+    if current^.prev <> nil then
+      current^.prev^.next := newNode
+    else
+      head := newNode;
+      
+    current^.prev := newNode;
+    writeln('Элемент вставлен перед индексом ', index, '.');
+  end;
+  
+  writeln('Нажмите любую клавишу...');
+  readkey;
+end;
+
+procedure DeleteByIndex;
+var
+  current: PNode;
+  i, index: integer;
+begin
+  clrscr();
+  writeln('     Удаление элемента по индексу     ');
+  writeln('--------------------------------------');
+  
+  if not is_created then
+  begin
+    writeln('Структура не создана.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  if head = nil then
+  begin
+    writeln('Список пуст. Удалять нечего.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  //показываем текущие элементы и их индексы
+  writeln('Текущие элементы списка:');
+  writeln('------------------------');
+  current := head;
+  i := 0;
+  while current <> nil do
+  begin
+    writeln('[', i, '] ', current^.login, ' <---> ', current^.password);
+    current := current^.next;
+    i := i + 1;
+  end;
+  writeln('------------------------');
+  
+  //запрашиваем индекс
+  write('Введите индекс элемента для удаления (0 - ', i-1, '): ');
+  readln(index);
+  
+  if (index < 0) or (index >= i) then
+  begin
+    writeln('Ошибка: индекс должен быть от 0 до ', i-1, '.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  //находим элемент с указанным индексом
+  current := head;
+  i := 0;
+  while (current <> nil) and (i < index) do
+  begin
+    current := current^.next;
+    i := i + 1;
+  end;
+  
+  if current = nil then
+  begin
+    writeln('Элемента с индексом ', index, ' не существует.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  //сохраняем данные для отображения
+  writeln('Удаляем элемент: ', current^.login, ' <---> ', current^.password);
+  
+  //удаляем элемент в зависимости от его позиции
+  if current = head then
+  begin
+    //удаление первого элемента
+    head := current^.next;
+    if head <> nil then
+      head^.prev := nil
+    else
+      tail := nil; //если был единственный элемент
+  end
+  else if current = tail then
+  begin
+    //удаление последнего элемента
+    tail := current^.prev;
+    tail^.next := nil;
+  end
+  else
+  begin
+    //удаление элемента в середине
+    current^.prev^.next := current^.next;
+    current^.next^.prev := current^.prev;
+  end;
+  
+  //освобождаем память
+  dispose(current);
+  
+  writeln('Элемент с индексом ', index, ' успешно удалён.');
+  
+  //показываем обновленный список
+  if head = nil then
+    writeln('Список теперь пуст.')
+  else
+  begin
+    writeln;
+    writeln('Обновленный список:');
+    writeln('-------------------');
+    current := head;
+    i := 0;
+    while current <> nil do
+    begin
+      writeln('[', i, '] ', current^.login, ' <---> ', current^.password);
+      current := current^.next;
+      i := i + 1;
+    end;
+  end;
+  
+  writeln('Нажмите любую клавишу...');
+  readkey;
+end;
+
+procedure SplitList;
+var
+  current: PNode;
+  i, index: integer;
+begin
+  clrscr();
+  writeln('     Разделение списка на два     ');
+  writeln('----------------------------------');
+  
+  if not is_created then
+  begin
+    writeln('Первый список не создан.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  if head = nil then
+  begin
+    writeln('Первый список пуст. Нечего разделять.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  if is_created2 then
+  begin
+    writeln('Второй список уже существует!');
+    writeln('Сначала объедините списки или очистите второй список.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  //показываем текущий список
+  writeln('Текущий список:');
+  writeln('---------------');
+  current := head;
+  i := 0;
+  while current <> nil do
+  begin
+    writeln('[', i, '] ', current^.login, ' <---> ', current^.password);
+    current := current^.next;
+    i := i + 1;
+  end;
+  writeln('---------------');
+  writeln('Всего элементов: ', i);
+  writeln;
+  
+  //запрашиваем индекс для разделения
+  write('Введите индекс для разделения (0 - ', i - 2, '): ');
+  writeln('(список разделится перед элементом с этим индексом)');
+  write('Индекс: ');
+  readln(index);
+  
+  //проверяем корректность индекса
+  if (index < 0) or (index >= i) then
+  begin
+    writeln('Индекс должен быть от 0 до ', i - 1, '.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  //если index = 0, то весь первый список останется первым
+  //второй список будет содержать все элементы
+  if index = 0 then
+  begin
+    head2 := head;
+    tail2 := tail;
+    head := nil;
+    tail := nil;
+    is_created2 := true;
+    
+    writeln;
+    writeln('Список успешно разделён:');
+    writeln('Первый список: пуст');
+    writeln('Второй список: содержит все ', i, ' элементов');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  //находим элемент, перед которым будем разделять
+  current := head;
+  i := 0;
+  while (current <> nil) and (i < index) do
+  begin
+    current := current^.next;
+    i := i + 1;
+  end;
+  
+  if current = nil then
+  begin
+    writeln('Невозможно найти элемент с индексом ', index, '.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+   
+  //устанавливаем второй список
+  head2 := current;
+  tail2 := tail;
+  
+  //обрезаем первый список
+  tail := current^.prev;
+  if tail <> nil then
+    tail^.next := nil;
+  
+  //настраиваем связи для второго списка
+  if head2 <> nil then
+    head2^.prev := nil;
+  
+  //если разделили так, что первый список стал пустым
+  if head = current then
+    head := nil;
+  
+  //обновляем tail первого списка, если нужно
+  if tail = nil then
+    head := nil;
+  
+  is_created2 := true;
+  
+  //подсчитываем количество элементов в каждом списке
+  var count1, count2: integer;
+  current := head;
+  count1 := 0;
+  while current <> nil do
+  begin
+    count1 := count1 + 1;
+    current := current^.next;
+  end;
+  
+  current := head2;
+  count2 := 0;
+  while current <> nil do
+  begin
+    count2 := count2 + 1;
+    current := current^.next;
+  end;
+  
+  //показываем результат
+  writeln();
+  writeln('Список успешно разделён!');
+  writeln('Первый список: ', count1, ' элементов');
+  writeln('Второй список: ', count2, ' элементов');
+  writeln();
+  writeln('Нажмите любую клавишу...');
+  readkey;
+end;
+
+procedure ShowSecondList;
+var
+  current: PNode;
+  i: integer;
+begin
+  clrscr();
+  writeln('     Второй список     ');
+  writeln('-----------------------');
+  
+  if not is_created2 then
+  begin
+    writeln('Второй список не создан.');
+  end
+  else if head2 = nil then
+  begin
+    writeln('Второй список пуст.');
+  end
+  else
+  begin
+    current := head2;
+    i := 0;
+    writeln('Содержимое второго списка:');
+    writeln('--------------------------');
+    while current <> nil do
+    begin
+      writeln('[', i, '] Логин: ', current^.login, ', Пароль: ', current^.password);
+      current := current^.next;
+      inc(i);
+    end;
+    writeln('--------------------------');
+    writeln('Всего элементов: ', i);
+  end;
+  
+  writeln;
+  writeln('Нажмите любую клавишу...');
+  readkey;
 end;
 
 //отображение меню
@@ -648,7 +1090,10 @@ begin
   writeln('14. Объединить списки');
   
   if choice = 15 then write('> ') else write('  ');
-  writeln('15. Выход');
+  writeln('15. Вывод элементов второго списка');
+
+  if choice = 16 then write('> ') else write('  ');
+  writeln('16. Выход');
   writeln();
   writeln('----------------------------------------');
   writeln('Управление: W/↑ - вверх, S/↓ - вниз');
@@ -728,14 +1173,15 @@ begin
                  end;
                end;
             7: ReadElem; //вывести элементы списка
-            8: FindByLogin;
-            9: FindByPassword;
-            10: FindElementByIndex;
-            11: ReplaceElementByIndex;
-            12: DeleteStructure;
-            13: SplitList;
-            14: GetListsTogether;
-            15: exitFlag := True;
+            8: FindByLogin; //найти по логину
+            9: FindByPassword; //найти по паролю
+            10: FindElementByIndex; //найти по индексу
+            11: ReplaceElementByIndex; //заменить по индексу
+            12: DeleteStructure; //удалить структуру
+            13: SplitList; //разделить списки
+            14: GetListsTogether; //соединить списки
+            15: ShowSecondList; //показать второй список
+            16: exitFlag := True;
           end;
         end;
       #27:  //ESC
