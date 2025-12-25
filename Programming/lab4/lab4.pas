@@ -149,7 +149,7 @@ begin
   begin
     if current^.login = target then
     begin
-      writeln('Найдено: логин -', current^.login, ', пароль - ', current^.password);
+      writeln('Найдено: логин - ', current^.login, ', пароль - ', current^.password);
       found := true;
     end;
     current := current^.next;
@@ -214,22 +214,25 @@ begin
   writeln('2. Запись элемента в структуру');
   
   if choice = 3 then write('> ') else write('  ');
-  writeln('3. Поиск элемента с заданным значением');
+  writeln('3. Поиск элемента по логину');
   
   if choice = 4 then write('> ') else write('  ');
-  writeln('4. Чтение элемента из структуры');
+  writeln('4. Поиск элемента по паролю');
   
   if choice = 5 then write('> ') else write('  ');
-  writeln('5. Определение пустоты структуры');
+  writeln('5. Чтение элемента из структуры');
   
   if choice = 6 then write('> ') else write('  ');
-  writeln('6. Определение количества элементов в структуре');
+  writeln('6. Определение пустоты структуры');
   
   if choice = 7 then write('> ') else write('  ');
-  writeln('7. Удаление структуры');
+  writeln('7. Определение количества элементов в структуре');
   
   if choice = 8 then write('> ') else write('  ');
-  writeln('8. Выход');
+  writeln('8. Удаление структуры');
+  
+  if choice = 9 then write('> ') else write('  ');
+  writeln('9. Выход');
   writeln();
   writeln('----------------------------------------');
   writeln('Управление: W/↑ - вверх, S/↓ - вниз');
