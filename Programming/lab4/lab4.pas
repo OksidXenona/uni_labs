@@ -20,7 +20,7 @@ var
   key: char;
   
 //тихое удаление
-procedure DeleteStructureSilent;
+procedure DeleteStructureSilent(var head, tail: PNode; var is_created: boolean);
 var 
   current, nextNode: PNode;
 begin
@@ -37,7 +37,7 @@ begin
 end;
  
 //создание структуры
-procedure CreateStructure;
+procedure CreateStructure(var head, tail: PNode; var is_created: boolean);
 var
   confirm: char;
 begin
@@ -56,7 +56,7 @@ begin
     
     if (confirm = 'y') or (confirm = 'Y') or (confirm = 'н') or (confirm = 'Н') then
     begin
-      DeleteStructureSilent;
+      DeleteStructureSilent(head, tail, is_created);
       is_created := true;
       writeln;
       writeln('Существующая структура удалена. Новая создана.');
@@ -83,7 +83,7 @@ begin
 end;
 
 //удаление структуры
-procedure DeleteStructure;
+procedure DeleteStructure(var head, tail: PNode; var is_created: boolean);
 begin
   clrscr();
   writeln('     Удаление структуры     ');
@@ -98,7 +98,7 @@ begin
     exit;
   end;
 
-  DeleteStructureSilent;
+  DeleteStructureSilent(head, tail, is_created);
   writeln('Структура удалена.');
   writeln;
   writeln('Нажмите любую клавишу...');
@@ -106,7 +106,7 @@ begin
 end;
 
 //добавление элемента в конец
-procedure AddToEnd;
+procedure AddToEnd(var head, tail: PNode; var is_created: boolean);
 var
   newNode: PNode;
 begin
@@ -147,7 +147,7 @@ begin
 end;
   
 //показать все элементы списка
-procedure ReadElem;
+procedure ReadElem(var head, tail: PNode; var is_created: boolean);
 var 
   current: PNode;
 begin
@@ -183,7 +183,7 @@ begin
 end;
   
 //подсчёт количества элементов
-function AmountOfElements: integer;
+function AmountOfElements(var head, tail: PNode; var is_created: boolean): integer;
 var
   current: PNode;
   count: integer;
@@ -199,7 +199,7 @@ begin
 end;
   
 //поиск по логину
-procedure FindByLogin;
+procedure FindByLogin(var head, tail: PNode; var is_created: boolean);
 var
   current: PNode;
   target: string;
@@ -249,7 +249,7 @@ begin
 end;
 
 //поиск по паролю
-procedure FindByPassword;
+procedure FindByPassword(var head, tail: PNode; var is_created: boolean);
 var
   current: PNode;
   target: integer;
@@ -298,7 +298,7 @@ begin
   readkey;
 end;
 
-procedure FindElementByIndex;
+procedure FindElementByIndex(var head, tail: PNode; var is_created: boolean);
 var
   current: PNode;
   i, index: integer;
@@ -323,7 +323,7 @@ begin
     exit;
   end;
   
-  write('Введите индекс для поиска (от 0 до ', AmountOfElements - 1, '): ');
+  write('Введите индекс для поиска (от 0 до ', AmountOfElements(head, tail, is_created) - 1, '): ');
   readln(index);
   
   if index < 0 then
@@ -352,7 +352,7 @@ begin
   readkey;
 end;
 
-procedure ReplaceElementByIndex;
+procedure ReplaceElementByIndex(var head, tail: PNode; var is_created: boolean);
 var
   current: PNode;
   i, index: integer;
@@ -463,7 +463,7 @@ begin
   readkey;
 end;
 
-procedure GetListsTogether;
+procedure GetListsTogether(var head, head2, tail, tail2: PNode; var is_created, is_created2: boolean);
 var
   current: PNode;
   count1, count2, total: integer;
@@ -611,7 +611,7 @@ begin
   readkey;
 end;
 
-procedure AddBeforeIndex;
+procedure AddBeforeIndex(var head, tail: PNode; var is_created: boolean);
 var
   newNode, current: PNode;
   i, index: integer;
@@ -636,7 +636,7 @@ begin
   end
   else
   begin
-    write('Введите индекс, перед которым добавить элемент (0 - ', AmountOfElements - 1, '): ');
+    write('Введите индекс, перед которым добавить элемент (0 - ', AmountOfElements(head, tail, is_created) - 1, '): ');
     readln(index);
   end;
 
@@ -727,7 +727,7 @@ begin
   readkey;
 end;
 
-procedure DeleteByIndex;
+procedure DeleteByIndex(var head, tail: PNode; var is_created: boolean);
 var
   current: PNode;
   i, index: integer;
@@ -847,7 +847,7 @@ begin
   readkey;
 end;
 
-procedure SplitList;
+procedure SplitList(var head, head2, tail, tail2: PNode; var is_created, is_created2: boolean);
 var
   current: PNode;
   i, index: integer;
@@ -998,7 +998,7 @@ begin
   readkey;
 end;
 
-procedure ShowSecondList;
+procedure ShowSecondList(var head2, tail2: PNode; var is_created2: boolean);
 var
   current: PNode;
   i: integer;
@@ -1037,7 +1037,7 @@ begin
 end;
 
 //отображение меню
-procedure menu;
+procedure menu(var choice: integer);
 begin
   clrscr();
   writeln('Лабораторная работа №4.');
@@ -1113,10 +1113,10 @@ begin
   //переменные для меню
   exitFlag := False;
   choice := 1;
-  paragraphs := 15;
+  paragraphs := 16;
 
   repeat
-    menu;
+    menu(choice);
     key := readkey;
 
     case key of
@@ -1133,10 +1133,10 @@ begin
       #13:  //Enter
         begin
           case choice of
-            1: CreateStructure; //создать структуру
-            2: AddToEnd; //добавить элемент в конец
-            3: AddBeforeIndex; //добавить элемент в перед индексом
-            4: DeleteByIndex; //удалить по индексу
+            1: CreateStructure(head, tail, is_created); //создать структуру
+            2: AddToEnd(head, tail, is_created); //добавить элемент в конец
+            3: AddBeforeIndex(head, tail, is_created); //добавить элемент в перед индексом
+            4: DeleteByIndex(head, tail, is_created); //удалить по индексу
             5: begin //проверка на пустоту
                  if not is_created then
                  begin
@@ -1167,20 +1167,20 @@ begin
                  else
                  begin
                    clrscr;
-                   writeln('Количество записей: ', AmountOfElements);
+                   writeln('Количество записей: ', AmountOfElements(head, tail, is_created));
                    writeln('Нажмите любую клавишу...');
                    readkey;
                  end;
                end;
-            7: ReadElem; //вывести элементы списка
-            8: FindByLogin; //найти по логину
-            9: FindByPassword; //найти по паролю
-            10: FindElementByIndex; //найти по индексу
-            11: ReplaceElementByIndex; //заменить по индексу
-            12: DeleteStructure; //удалить структуру
-            13: SplitList; //разделить списки
-            14: GetListsTogether; //соединить списки
-            15: ShowSecondList; //показать второй список
+            7: ReadElem(head, tail, is_created); //вывести элементы списка
+            8: FindByLogin(head, tail, is_created); //найти по логину
+            9: FindByPassword(head, tail, is_created); //найти по паролю
+            10: FindElementByIndex(head, tail, is_created); //найти по индексу
+            11: ReplaceElementByIndex(head, tail, is_created); //заменить по индексу
+            12: DeleteStructure(head, tail, is_created); //удалить структуру
+            13: SplitList(head, head2, tail, tail2, is_created, is_created2); //разделить списки
+            14: GetListsTogether(head, head2, tail, tail2, is_created, is_created2); //соединить списки
+            15: ShowSecondList(head2, tail2, is_created2); //показать второй список
             16: exitFlag := True;
           end;
         end;
@@ -1191,7 +1191,7 @@ begin
   until exitFlag;
 
   //финальная очистка
-  DeleteStructureSilent;
+  DeleteStructureSilent(head, tail, is_created);
 
   clrscr;
   writeln('Программа завершена.');
