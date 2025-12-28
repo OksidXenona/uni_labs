@@ -52,8 +52,7 @@ begin
     writeln;
     
     confirm := readkey;
-    writeln(confirm);
-    
+
     if (confirm = 'y') or (confirm = 'Y') or (confirm = 'н') or (confirm = 'Н') then
     begin
       DeleteStructureSilent(head, tail, is_created);
@@ -117,8 +116,7 @@ begin
   if not is_created then
   begin
     clrscr;
-    writeln('Структура не создана!');
-    writeln('Сначала выполните пункт "1. Создание структуры".');
+    writeln('Структура не создана.');
     writeln('Нажмите любую клавишу...');
     readkey;
     exit;
@@ -242,7 +240,7 @@ begin
   end;
   
   if not found then
-    writeln('Элемент с логином "', target, '" не найден.');
+    writeln('Элемент с логином ", target, " не найден.');
   
   writeln('Нажмите любую клавишу...');
   readkey;
@@ -298,6 +296,7 @@ begin
   readkey;
 end;
 
+//найти элемент по индексу
 procedure FindElementByIndex(var head, tail: PNode; var is_created: boolean);
 var
   current: PNode;
@@ -352,6 +351,7 @@ begin
   readkey;
 end;
 
+//заменить элемент по индексу
 procedure ReplaceElementByIndex(var head, tail: PNode; var is_created: boolean);
 var
   current: PNode;
@@ -463,154 +463,7 @@ begin
   readkey;
 end;
 
-procedure GetListsTogether(var head, head2, tail, tail2: PNode; var is_created, is_created2: boolean);
-var
-  current: PNode;
-  count1, count2, total: integer;
-begin
-  clrscr();
-  writeln('     Объединение двух списков     ');
-  writeln('----------------------------------');
-  
-  //проверяем существование списков
-  if not is_created then
-  begin
-    writeln('Первый список не создан.');
-    writeln('Нажмите любую клавишу...');
-    readkey;
-    exit;
-  end;
-  
-  if not is_created2 then
-  begin
-    writeln('Второй список не создан.');
-    writeln('Нажмите любую клавишу...');
-    readkey;
-    exit;
-  end;
-  
-  //подсчитываем элементы в каждом списке
-  count1 := 0;
-  current := head;
-  writeln('Первый список:');
-  writeln('--------------');
-  if head = nil then
-    writeln('Список пуст.')
-  else
-  begin
-    while current <> nil do
-    begin
-      writeln('[', count1, '] ', current^.login, ' <---> ', current^.password);
-      current := current^.next;
-      count1 := count1 + 1;
-    end;
-  end;
-  writeln('Всего элементов: ', count1);
-  writeln;
-  
-  count2 := 0;
-  current := head2;
-  writeln('Второй список:');
-  writeln('--------------');
-  if head2 = nil then
-    writeln('Список пуст')
-  else
-  begin
-    while current <> nil do
-    begin
-      writeln('[', count2, '] ', current^.login, ' <---> ', current^.password);
-      current := current^.next;
-      count2 := count2 + 1;
-    end;
-  end;
-  writeln('Всего элементов: ', count2);
-  writeln;
-  
-  total := count1 + count2;
-  
-  //если оба списка пустые
-  if (count1 = 0) and (count2 = 0) then
-  begin
-    writeln('Оба списка пусты.');
-    writeln('Нажмите любую клавишу...');
-    readkey;
-    exit;
-  end;
-  
-  //если второй список пустой
-  if count2 = 0 then
-  begin
-    writeln('Второй список пуст.');
-    writeln('Нажмите любую клавишу...');
-    readkey;
-    exit;
-  end;
-  
-  //показываем, что будет после объединения
-  writeln('После объединения будет ', total, ' элементов.');
-  writeln();
-  
-  //выполняем объединение
-  if head = nil then
-  begin
-    //если первый список пустой
-    head := head2;
-    tail := tail2;
-  end
-  else
-  begin
-    //если первый список не пустой
-    if tail <> nil then
-    begin
-      tail^.next := head2;
-      if head2 <> nil then
-        head2^.prev := tail;
-    end;
-    
-    //обновляем tail
-    if tail2 <> nil then
-      tail := tail2;
-  end;
-  
-  //очищаем второй список
-  head2 := nil;
-  tail2 := nil;
-  is_created2 := false;
-  
-  //показываем результат
-  writeln;
-  writeln('Списки успешно объединены!');
-  writeln;
-  
-  //показываем объединенный список
-  current := head;
-  if current = nil then
-  begin
-    writeln('Объединенный список пуст.');
-  end
-  else
-  begin
-    writeln('Объединенный список:');
-    writeln('--------------------');
-    var i: integer := 0;
-    while current <> nil do
-    begin
-      writeln('[', i, '] ', current^.login, ' <---> ', current^.password);
-      current := current^.next;
-      i := i + 1;
-    end;
-    writeln('--------------------');
-    writeln('Всего элементов: ', i);
-  end;
-  
-  writeln;
-  writeln('Второй список очищен.');
-  writeln('Теперь доступен только объединенный список.');
-  
-  writeln('Нажмите любую клавишу...');
-  readkey;
-end;
-
+//добавить элемент перед индексом
 procedure AddBeforeIndex(var head, tail: PNode; var is_created: boolean);
 var
   newNode, current: PNode;
@@ -727,6 +580,7 @@ begin
   readkey;
 end;
 
+//удалить элемент по индексу
 procedure DeleteByIndex(var head, tail: PNode; var is_created: boolean);
 var
   current: PNode;
@@ -847,6 +701,7 @@ begin
   readkey;
 end;
 
+//разделить списки
 procedure SplitList(var head, head2, tail, tail2: PNode; var is_created, is_created2: boolean);
 var
   current: PNode;
@@ -998,6 +853,128 @@ begin
   readkey;
 end;
 
+//соединить списки
+procedure GetListsTogether(var head, head2, tail, tail2: PNode; var is_created, is_created2: boolean);
+var
+  current: PNode;
+  count1, count2, total: integer;
+begin
+  clrscr();
+  writeln('     Объединение двух списков     ');
+  writeln('----------------------------------');
+  
+  //проверяем существование списков
+  if not is_created then
+  begin
+    writeln('Первый список не создан.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  if not is_created2 then
+  begin
+    writeln('Второй список не создан.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  //подсчитываем элементы в каждом списке
+  count1 := AmountOfElements(head, tail, is_created);
+  writeln('Всего элементов: ', count1);
+  writeln;
+  
+  count2 := AmountOfElements(head2, tail2, is_created2);
+  writeln('Всего элементов: ', count2);
+  writeln;
+  
+  total := count1 + count2;
+  
+  //если оба списка пустые
+  if (count1 = 0) and (count2 = 0) then
+  begin
+    writeln('Оба списка пусты.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  //если второй список пустой
+  if count2 = 0 then
+  begin
+    writeln('Второй список пуст.');
+    writeln('Нажмите любую клавишу...');
+    readkey;
+    exit;
+  end;
+  
+  //показываем, что будет после объединения
+  writeln('После объединения будет ', total, ' элементов.');
+  writeln();
+  
+  //выполняем объединение
+  if head = nil then
+  begin
+    //если первый список пустой
+    head := head2;
+    tail := tail2;
+  end
+  else
+  begin
+    //если первый список не пустой
+    if tail <> nil then
+    begin
+      tail^.next := head2;
+      if head2 <> nil then
+        head2^.prev := tail;
+    end;
+    
+    //обновляем tail
+    if tail2 <> nil then
+      tail := tail2;
+  end;
+  
+  //очищаем второй список
+  head2 := nil;
+  tail2 := nil;
+  is_created2 := false;
+  
+  //показываем результат
+  writeln;
+  writeln('Списки успешно объединены!');
+  writeln;
+  
+  //показываем объединенный список
+  current := head;
+  if current = nil then
+  begin
+    writeln('Объединенный список пуст.');
+  end
+  else
+  begin
+    writeln('Объединенный список:');
+    writeln('--------------------');
+    var i: integer := 0;
+    while current <> nil do
+    begin
+      writeln('[', i, '] ', current^.login, ' <---> ', current^.password);
+      current := current^.next;
+      i := i + 1;
+    end;
+    writeln('--------------------');
+    writeln('Всего элементов: ', i);
+  end;
+  
+  writeln;
+  writeln('Второй список очищен.');
+  writeln('Теперь доступен только объединенный список.');
+  
+  writeln('Нажмите любую клавишу...');
+  readkey;
+end;
+
+//показать второй список
 procedure ShowSecondList(var head2, tail2: PNode; var is_created2: boolean);
 var
   current: PNode;
@@ -1025,7 +1002,7 @@ begin
     begin
       writeln('[', i, '] Логин: ', current^.login, ', Пароль: ', current^.password);
       current := current^.next;
-      inc(i);
+      i = i + 1;
     end;
     writeln('--------------------------');
     writeln('Всего элементов: ', i);
