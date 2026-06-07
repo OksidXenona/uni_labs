@@ -50,14 +50,14 @@ def generate_random_date():
     return f"{year:04d}-{month:02d}-{day:02d}"
 
 def generate_data(filename, size=1):
-    bytes = size * 1024**3 # Гигабайты в байты
+    total_bytes = size * 1024**3 # Гигабайты в байты
     curr_size = 0
 
-    with open(filename, 'w', newline='', encoding='utf-8-sig') as f:
+    with open(filename, 'w', newline='', encoding='utf-8') as f:
         text = csv.writer(f)
         text.writerow(["дата", "город", "артист"])
 
-        while curr_size < bytes:
+        while curr_size < total_bytes:
             row = [
                 generate_random_date(),
                 random.choice(cities),
@@ -69,4 +69,5 @@ def generate_data(filename, size=1):
 
             curr_size += len(line.encode('utf-8'))
 
-generate_data("data.csv", 1)
+if __name__ == "__main__":
+    generate_data("data.csv", 1)
