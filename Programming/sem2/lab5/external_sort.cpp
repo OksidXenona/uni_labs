@@ -6,6 +6,7 @@
 #include <queue>
 #include <algorithm>
 #include <cstdio>
+#include <chrono>
 
 struct Record {
     std::string date;
@@ -21,9 +22,8 @@ int choose_key(const std::string& key) {
     return 0;
 }
 
-const int section_size = 100000;
+const int section_size = 500000;
 
-// Глобальный ключ для merge
 int current_key_index = 0;
 
 std::vector<std::string> split_file(const std::string& input_file, int key_index) {
@@ -216,14 +216,25 @@ int main() {
 
     int key_index = choose_key(key);
 
-    std::vector<std::string> temp_files =
-        split_file("data.csv", key_index);
+    auto total_start = std::chrono::high_resolution_clock::now();
 
-    merge_files(
-        temp_files,
-        "sorted.txt",
-        key_index
-    );
+    auto split_start = std::chrono::high_resolution_clock::now();
+    std::vector<std::string> temp_files = split_file("data.csv", key_index);
+    auto split_end = std::chrono::high_resolution_clock::now();
+
+    double split_time = std::chrono::duration<double>(split_end - split_start).count();
+    std::cout << "Split time: " << split_time << " sec\n";
+
+    auto merge_start = std::chrono::high_resolution_clock::now();
+    merge_files(temp_files, "sorted.txt", key_index);
+    auto merge_end = std::chrono::high_resolution_clock::now();
+
+    double merge_time = std::chrono::duration<double>(merge_end - merge_start).count();
+    std::cout << "Merge time: " << merge_time << " sec\n";
+
+    auto total_end = std::chrono::high_resolution_clock::now();
+    double total_time = std::chrono::duration<double>(total_end - total_start).count();
+    std::cout << "Total time: " << total_time << " sec\n";
 
     std::cout << "Сортировка завершена.\n";
 
