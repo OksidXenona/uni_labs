@@ -18,7 +18,7 @@ def load_file(filename):
         with open(filename, "r", encoding="utf-8") as f:
             reader = csv.reader(f)
 
-            # Читаем заголовок
+            # читаем заголовок
             headers = next(reader)
             tree["columns"] = headers
             tree["show"] = "headings"
@@ -27,7 +27,7 @@ def load_file(filename):
                 tree.heading(col, text=col)
                 tree.column(col, width=150)
 
-            # Читаем только первые 100 строк для проверки (чтобы не вешать GUI)
+            # читаем только первые 100 строк для проверки
             for i, row in enumerate(reader):
                 tree.insert("", "end", values=row)
                 if i >= 100:
@@ -41,7 +41,6 @@ def generate():
         set_status("Генерация data.csv (1 ГБ)... Это займет время.")
         start = time.time()
 
-        # Вызываем функцию из твоего generator.py
         File_Generator.generate_data("data.csv", size=1)
 
         load_file("data.csv")
@@ -55,7 +54,6 @@ def sort_python():
         set_status("Python: сортировка...")
         start = time.time()
 
-        # Вызываем функцию, она теперь вернет словарь со статистикой
         stats = external_sort.external_sort("data.csv", "sorted_py.csv", combo.get())
 
         load_file("sorted_py.csv")
@@ -73,14 +71,8 @@ def sort_cpp():
         set_status("C++: сортировка...")
         start = time.time()
 
-        # Определяем имя exe-файла в зависимости от ОС
         exe_name = "sort_cpp.exe" if os.name == "nt" else "./sort_cpp"
 
-        if not os.path.exists(exe_name):
-            set_status(f"Ошибка: не найден {exe_name}. Скомпилируй C++ код!")
-            return
-
-        # Запускаем C++ программу и передаем ключ через input
         process = subprocess.run(
             [exe_name],
             input=combo.get() + "\n",
@@ -96,7 +88,6 @@ def sort_cpp():
 
     threading.Thread(target=task, args=()).start()
 
-# --- Инициализация окна ---
 window = tk.Tk()
 window.title("Лабораторная 5.1: Внешняя сортировка")
 window.geometry("900x600")
